@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<title>Изменения уровней водохранилищ ГЭС РусГидро</title>
+
+<link href="styles/style.css?201804191859" rel="stylesheet" type="text/css">
+
+<script src="scripts/jquery-v1.12.js" type="text/javascript"></script>
+<script src="assets/jquery-ui/jquery-ui.min-v1.12.js" type="text/javascript"></script>
+
+<script src="assets/fancybox/jquery.fancybox.js" type="text/javascript"></script>
+<link href="assets/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+
+<script src="assets/validate/jquery.validate.min.js" type="text/javascript"></script>
+<script src="assets/maskedinput/jquery.maskedinput.min.js" type="text/javascript"></script>
+
+<script src="assets/fancybox/jquery.fancybox.js" type="text/javascript"></script>
+<link href="assets/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css">
+
+<link href="assets/owlslider/owl.carousel.css" rel="stylesheet" type="text/css">
+<script src="assets/owlslider/owl.carousel.js" type="text/javascript"></script>
+
+<script src="assets/datepicker/datepicker-ru.js"></script>
+<link href="assets/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css">
+
+<script src="scripts/scripts.js" type="text/javascript"></script>
+
+
+</head>
+
+<body>
+
+<div class="container">
+	
+	<div class="head">
+		
+		<div class="head-title">Изменения уровней водохранилищ ГЭС РусГидро</div>
+		<div class="head-date"><b>Выберите дату</b><input type="text" id="popupDatepicker" value="08.02.2019" /></div>
+		
+		<script>			
+			
+			$(function(){
+			
+				$('.popup-trigger').mouseenter(function(){ 
+					ptop = $(this).position(); ptop = ptop.top+18;
+					$('.popup-info').removeClass('active');
+					$(this).next('.popup-info').css('top',ptop).addClass('active');
+				})
+			
+				$('.popup-wrapper').mouseleave(function(){ 
+					$('.popup-info').removeClass('active');
+				})
+				
+				date = new Date("2019-02-08");
+				
+				function makeCalDate(date) {
+					var d_events = date.getDate().toString();
+					var m_events = 1 + date.getMonth();
+					var y_events = date.getFullYear().toString();
+					if(d_events.length < 2) { d_events = "0" + d_events; }
+					m_events = m_events.toString();					
+					if(m_events.length < 2) { m_events = "0" + m_events; }
+					var Date_events = d_events +"."+ m_events +"."+ y_events;
+					return Date_events;                        
+				}
+				
+				dateMax = makeCalDate(date);
+				
+				$('#popupDatepicker').datepicker({
+					dateFormat: 'dd.mm.yy',			
+					changeMonth: true,
+					changeYear: true,
+					maxDate: dateMax,
+					minDate: '13.04.2013',
+					yearRange: "2013:",
+					onSelect: function(dateText,inst) {                                												
+						selDay = inst.selectedDay; if(selDay<10) selDay = '0'+selDay;
+						selMonth = inst.selectedMonth+1; if(selMonth<10) selMonth = '0'+selMonth;
+						document.location.href = '?date=' + inst.selectedYear + '-' + selMonth + '-' +  selDay;
+					}
+					
+				});
+			})				
+			
+		</script>
+		
+	</div>
+	
+	<div class="info">
+	
+		<div class="info-title">Условные обозначения</div>
+		
+		<div class="legend">
+			<p><span class="l-red"></span><b>ФПУ</b> – форсированный подпорный уровень, максимальная технически возможная отметка наполнения водохранилища, м</p>
+			<p><span class="l-green"></span><b>НПУ</b> - нормальный подпорный уровень, отметка полного наполнения водохранилища в обычных условиях, м</p>
+			<p><span class="l-black"></span><b>УМО</b> – уровень мертвого объема, отметка предельной сработки водохранилища, м</p>
+		</div>
+		
+		<p><b>Уровень</b> - текущая отметка уровня воды в водохранилище на 8:00 (МСК), м</p>
+		<p><b>Свободная ёмкость</b> – свободный объем водохранилища, разница между текущим уровнем и НПУ, км<sup>3</sup></p>
+		<p><b>Приток</b> – количество воды, поступившей в водохранилище за предыдущие сутки, м<sup>3</sup>/с (среднесуточное значение)</p>
+		<p><b>Общий расход</b> – общее количество воды, пропускаемой через гидроузел (турбины и водосбросы) за предыдущие сутки, м<sup>3</sup>/сек (среднесуточное значение)</p>
+		<p><b>Расход через водосбросы</b> - количество воды, сбрасываемой через водосбросы мимо турбин за предыдущие сутки, м<sup>3</sup>/с (среднесуточное значение)</p>
+		
+	</div>	
+	
+	
+	<div class="informer">
+		
+		<div class="data-block" style="margin-right: 60px">
+			<img src="styles/img/informer/zeya.png" alt="" />
+			<div class="informer-block zeya">			
+								<span class="current down">310.6</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>322.1</span></div>
+					<div class="npu" style="bottom:95px;"><span >315</span></div>
+					<div class="umo" style="bottom:60px;"><span>299</span></div>
+					<div class="level" style="height:85px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>322.1 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>315 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>299 м</b></p>
+							<p>Уровень — <b>310.6 м</b> <span class="down">0.02</span></p>
+							<p>Свободная ёмкость — <b>10080 млн.м<sup>3</sup></b> <span class="up">44</span></p>
+							<p>Приток — <b>11 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>748 м<sup>3</sup>/c</b> <span class="up">38</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>
+		</div>
+		
+		<div class="data-block" style="margin-right: 60px">
+			<img src="styles/img/informer/bureya.png" alt="" />
+			<div class="informer-block bureya">			
+								<span class="current up">246.42</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>263.4</span></div>
+					<div class="npu" style="bottom:96px;"><span >256</span></div>
+					<div class="umo" style="bottom:60px;"><span>236</span></div>
+					<div class="level" style="height:79px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>263.4 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>256 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>236 м</b></p>
+							<p>Уровень — <b>246.42 м</b> <span class="up">0.16</span></p>
+							<p>Свободная ёмкость — <b>6039 млн.м<sup>3</sup></b> <span class="down">85</span></p>
+							<p>Приток — <b>343 м<sup>3</sup>/c</b> <span class="up">288</span></p>
+							<p>Общий расход — <b>528 м<sup>3</sup>/c</b> <span class="up">30</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>
+		</div>
+		
+		<div class="data-block">
+			<img src="styles/img/informer/kolyma.png" alt="" />
+			<div class="informer-block kolyma">			
+								<span class="current down">444.09</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>457.6</span></div>
+					<div class="npu" style="bottom:98px;"><span >451.5</span></div>
+					<div class="umo" style="bottom:60px;"><span>432</span></div>
+					<div class="level" style="height:84px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>457.6 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>451.5 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>432 м</b></p>
+							<p>Уровень — <b>444.09 м</b> <span class="down">0.06</span></p>
+							<p>Свободная ёмкость — <b>3059 млн.м<sup>3</sup></b> <span class="up">24</span></p>
+							<p>Приток — <b>7 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>297 м<sup>3</sup>/c</b> </p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>
+			<div class="informer-block ust-sr">			
+								<span class="current up">272.55</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>274,3</span></div>
+					<div class="npu" style="bottom:108px;"><span >274,3</span></div>
+					<div class="umo" style="bottom:60px;"><span>245.2</span></div>
+					<div class="level" style="height:107px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>274,3 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>274,3 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>245.2 м</b></p>
+							<p>Уровень — <b>272.55 м</b> <span class="up">0.06</span></p>
+							<p>Свободная ёмкость — <b>3339 млн.м<sup>3</sup></b> <span class="down">9</span></p>
+							<p>Приток — <b>305 м<sup>3</sup>/c</b> <span class="up">12</span></p>
+							<p>Общий расход — <b>207 м<sup>3</sup>/c</b> </p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>
+		</div>
+		
+		<div class="data-block">
+			<img src="styles/img/informer/volga.png" alt="" />
+			<div style="position: relative;z-index: 2;width: 892px;height: 31px;background-color: #ffffff;"></div>
+			<div class="informer-block uglich">			
+								<span class="current down">112.54</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>113.4</span></div>
+					<div class="npu" style="bottom:105px;"><span >113</span></div>
+					<div class="umo" style="bottom:60px;"><span>109</span></div>
+					<div class="level" style="height:100px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>113.4 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>113 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>109 м</b></p>
+							<p>Уровень — <b>112.54 м</b> <span class="down">0.09</span></p>
+							<p>Свободная ёмкость — <b>104 млн.м<sup>3</sup></b> <span class="up">20</span></p>
+							<p>Приток — <b>230 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>434 м<sup>3</sup>/c</b> <span class="up">5</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			<div class="informer-block rybinsk">			
+								<span class="current">99.62</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>103.81</span></div>
+					<div class="npu" style="bottom:96px;"><span >101.81</span></div>
+					<div class="umo" style="bottom:60px;"><span>96.91</span></div>
+					<div class="level" style="height:80px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>103.81 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>101.81 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>96.91 м</b></p>
+							<p>Уровень — <b>99.62 м</b> </p>
+							<p>Свободная ёмкость — <b>8762 млн.м<sup>3</sup></b> </p>
+							<p>Приток — <b>700 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>715 м<sup>3</sup>/c</b> <span class="down">7</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			<div class="informer-block nijegorod">
+								<span class="current down">82.56</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>85.5</span></div>
+					<div class="npu" style="bottom:93px;"><span >84</span></div>
+					<div class="umo" style="bottom:60px;"><span>81</span></div>
+					<div class="level" style="height:77px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>85.5 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>84 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>81 м</b></p>
+							<p>Уровень — <b>82.56 м</b> <span class="down">0.02</span></p>
+							<p>Свободная ёмкость — <b>2062 млн.м<sup>3</sup></b> <span class="up">26</span></p>
+							<p>Приток — <b>879 м<sup>3</sup>/c</b> <span class="down">27</span></p>
+							<p>Общий расход — <b>1028 м<sup>3</sup>/c</b> <span class="down">21</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			
+			<div class="informer-block cheboksar">
+								<span class="current up">62.96</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>69.5</span></div>
+					<div class="npu" style="bottom:66px;"><span class=top>63.3</span></div>
+					<div class="umo" style="bottom:60px;"><span>62.5</span></div>
+					<div class="level" style="height:63px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>69.5 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>63.3 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>62.5 м</b></p>
+							<p>Уровень — <b>62.96 м</b> <span class="up">0.02</span></p>
+							<p>Свободная ёмкость — <b>370 млн.м<sup>3</sup></b> <span class="down">20</span></p>
+							<p>Приток — <b>1720 м<sup>3</sup>/c</b> <span class="up">10</span></p>
+							<p>Общий расход — <b>1750 м<sup>3</sup>/c</b> <span class="down">420</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			
+			<div class="informer-block jigul">
+								<span class="current down">49.77</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>55.3</span></div>
+					<div class="npu" style="bottom:98px;"><span >53</span></div>
+					<div class="umo" style="bottom:60px;"><span>45.5</span></div>
+					<div class="level" style="height:82px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>55.3 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>53 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>45.5 м</b></p>
+							<p>Уровень — <b>49.77 м</b> <span class="down">0.01</span></p>
+							<p>Свободная ёмкость — <b>17562 млн.м<sup>3</sup></b> <span class="up">46</span></p>
+							<p>Приток — <b>5088 м<sup>3</sup>/c</b> <span class="down">98</span></p>
+							<p>Общий расход — <b>5203 м<sup>3</sup>/c</b> <span class="down">160</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			
+			<div class="informer-block saratov">
+								<span class="current up">28.12</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>31.4</span></div>
+					<div class="npu" style="bottom:71px;"><span class=top>28</span></div>
+					<div class="umo" style="bottom:60px;"><span>27</span></div>
+					<div class="level" style="height:73px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>31.4 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>28 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>27 м</b></p>
+							<p>Уровень — <b>28.12 м</b> <span class="up">0.07</span></p>
+							<p>Свободная ёмкость — <b>-226 млн.м<sup>3</sup></b> <span class="down">132</span></p>
+							<p>Приток — <b>5317 м<sup>3</sup>/c</b> <span class="down">160</span></p>
+							<p>Общий расход — <b>5431 м<sup>3</sup>/c</b> <span class="down">45</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			
+			<div class="informer-block voljsk">
+								<span class="current up">14.95</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>16.3</span></div>
+					<div class="npu" style="bottom:95px;"><span >15</span></div>
+					<div class="umo" style="bottom:60px;"><span>12</span></div>
+					<div class="level" style="height:94px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>16.3 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>15 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>12 м</b></p>
+							<p>Уровень — <b>14.95 м</b> <span class="up">0.03</span></p>
+							<p>Свободная ёмкость — <b>149 млн.м<sup>3</sup></b> <span class="down">89</span></p>
+							<p>Приток — <b>5450 м<sup>3</sup>/c</b> <span class="down">50</span></p>
+							<p>Общий расход — <b>5200 м<sup>3</sup>/c</b> <span class="down">70</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			
+		</div>
+		
+		<div class="data-block" style="margin-right: 60px">
+			<img src="styles/img/informer/kama.png" alt="" />
+			<div class="informer-block kama">
+								<span class="current down">105.14</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>110.2</span></div>
+					<div class="npu" style="bottom:102px;"><span >108.5</span></div>
+					<div class="umo" style="bottom:60px;"><span>100</span></div>
+					<div class="level" style="height:85px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>110.2 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>108.5 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>100 м</b></p>
+							<p>Уровень — <b>105.14 м</b> <span class="down">0.05</span></p>
+							<p>Свободная ёмкость — <b>5309 млн.м<sup>3</sup></b> <span class="up">65</span></p>
+							<p>Приток — <b>476 м<sup>3</sup>/c</b> <span class="down">1</span></p>
+							<p>Общий расход — <b>1385 м<sup>3</sup>/c</b> <span class="up">18</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			<div class="informer-block votinsk">
+								<span class="current down">87.84</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>90</span></div>
+					<div class="npu" style="bottom:102px;"><span >89</span></div>
+					<div class="umo" style="bottom:60px;"><span>84</span></div>
+					<div class="level" style="height:92px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>90 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>89 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>84 м</b></p>
+							<p>Уровень — <b>87.84 м</b> <span class="down">0.05</span></p>
+							<p>Свободная ёмкость — <b>1196 млн.м<sup>3</sup></b> <span class="up">50</span></p>
+							<p>Приток — <b>1409 м<sup>3</sup>/c</b> <span class="up">17</span></p>
+							<p>Общий расход — <b>1677 м<sup>3</sup>/c</b> <span class="up">20</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+		</div>
+		
+		<div class="data-block" style="margin-bottom: 120px">
+			<img src="styles/img/informer/yenisei.png" alt="" />
+			<div class="informer-block sayano">
+								<span class="current down">520.85</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>540</span></div>
+					<div class="npu" style="bottom:108px;"><span >539</span></div>
+					<div class="umo" style="bottom:60px;"><span>500</span></div>
+					<div class="level" style="height:86px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>540 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>539 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>500 м</b></p>
+							<p>Уровень — <b>520.85 м</b> <span class="down">0.13</span></p>
+							<p>Свободная ёмкость — <b>8703 млн.м<sup>3</sup></b> <span class="up">46</span></p>
+							<p>Приток — <b>360 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>1173 м<sup>3</sup>/c</b> <span class="up">56</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1				
+			</div>
+			<div class="informer-comment"><b>*</b> водохранилище Майнской ГЭС сглаживает неравномерность ежесуточных сбросов СШГЭС, когда Саяно-Шушенская ГЭС ведет глубокое регулирование нагрузки в энергосистеме</div>
+		</div>
+		
+		<div class="data-block" style="margin-right: 60px">
+			<img src="styles/img/informer/angara.png" alt="" />
+			<div class="informer-block irkutsk">
+								<span class="current">456.49</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>458.2</span></div>
+					<div class="npu" style="bottom:87px;"><span >457</span></div>
+					<div class="umo" style="bottom:60px;"><span>455.54</span></div>
+					<div class="level" style="height:78px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>458.2 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>457 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>455.54 м</b></p>
+							<p>Уровень — <b>456.49 м</b> </p>
+							<p>Свободная ёмкость — <b>16065 млн.м<sup>3</sup></b> </p>
+							<p>Приток — <b>350 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>1400 м<sup>3</sup>/c</b> <span class="down">140</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>
+			<div class="informer-block bratsk">
+								<span class="current down">396.3</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>402.5</span></div>
+					<div class="npu" style="bottom:108px;"><span >402.08</span></div>
+					<div class="umo" style="bottom:60px;"><span>392.08</span></div>
+					<div class="level" style="height:80px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>402.5 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>402.08 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>392.08 м</b></p>
+							<p>Уровень — <b>396.3 м</b> <span class="down">0.03</span></p>
+							<p>Свободная ёмкость — <b>29380 млн.м<sup>3</sup></b> <span class="up">140</span></p>
+							<p>Приток — <b>1660 м<sup>3</sup>/c</b> <span class="down">100</span></p>
+							<p>Общий расход — <b>2730 м<sup>3</sup>/c</b> <span class="up">7</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			<div class="informer-block ust-ilim">
+								<span class="current">295.51</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>296.6</span></div>
+					<div class="npu" style="bottom:96px;"><span >296</span></div>
+					<div class="umo" style="bottom:60px;"><span>294.5</span></div>
+					<div class="level" style="height:84px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>296.6 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>296 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>294.5 м</b></p>
+							<p>Уровень — <b>295.51 м</b> </p>
+							<p>Свободная ёмкость — <b>920 млн.м<sup>3</sup></b> </p>
+							<p>Приток — <b>0 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>2895 м<sup>3</sup>/c</b> <span class="up">17</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+			<div class="informer-block boguch">
+								<span class="current">207.32</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>209.5</span></div>
+					<div class="npu" style="bottom:80px;"><span >208</span></div>
+					<div class="umo" style="bottom:60px;"><span>207</span></div>
+					<div class="level" style="height:66px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>209.5 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>208 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>207 м</b></p>
+							<p>Уровень — <b>207.32 м</b> </p>
+							<p>Свободная ёмкость — <b>1561 млн.м<sup>3</sup></b> </p>
+							<p>Приток — <b>2815 м<sup>3</sup>/c</b> <span class="up">15</span></p>
+							<p>Общий расход — <b>2992 м<sup>3</sup>/c</b> <span class="up">1</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>			
+		</div>
+		
+		<div class="data-block">
+			<img src="styles/img/informer/ob.png" alt="" />
+			<div class="informer-block novosib">
+								<span class="current down">111.46</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>115.7</span></div>
+					<div class="npu" style="bottom:95px;"><span >113.5</span></div>
+					<div class="umo" style="bottom:60px;"><span>108.5</span></div>
+					<div class="level" style="height:81px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>115.7 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>113.5 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>108.5 м</b></p>
+							<p>Уровень — <b>111.46 м</b> <span class="down">0.04</span></p>
+							<p>Свободная ёмкость — <b>2018 млн.м<sup>3</sup></b> <span class="up">35</span></p>
+							<p>Приток — <b>430 м<sup>3</sup>/c</b> <span class="down">4</span></p>
+							<p>Общий расход — <b>737 м<sup>3</sup>/c</b> <span class="down">3</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>						
+		</div>
+		
+		<div class="data-block" style="margin-right: 20px">
+			<img src="styles/img/informer/coissu.png" alt="" />
+			<div class="informer-block irganai">
+								<span class="current down">532.23</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>548.7</span></div>
+					<div class="npu" style="bottom:107px;"><span >547</span></div>
+					<div class="umo" style="bottom:60px;"><span>520</span></div>
+					<div class="level" style="height:81px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>548.7 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>547 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>520 м</b></p>
+							<p>Уровень — <b>532.23 м</b> <span class="down">0.41</span></p>
+							<p>Свободная ёмкость — <b>234 млн.м<sup>3</sup></b> <span class="up">6</span></p>
+							<p>Приток — <b>26 м<sup>3</sup>/c</b> <span class="up">2</span></p>
+							<p>Общий расход — <b>59 м<sup>3</sup>/c</b> <span class="down">2</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>						
+		</div>
+		
+		<div class="data-block" style="margin-right: 20px">
+			<img src="styles/img/informer/sulak.png" alt="" />
+			<div class="informer-block chirkeysk">
+								<span class="current down">335.98</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>357.3</span></div>
+					<div class="npu" style="bottom:107px;"><span >355</span></div>
+					<div class="umo" style="bottom:60px;"><span>315</span></div>
+					<div class="level" style="height:85px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>357.3 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>355 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>315 м</b></p>
+							<p>Уровень — <b>335.98 м</b> <span class="down">0.21</span></p>
+							<p>Свободная ёмкость — <b>715 млн.м<sup>3</sup></b> <span class="up">7</span></p>
+							<p>Приток — <b>83 м<sup>3</sup>/c</b> <span class="up">2</span></p>
+							<p>Общий расход — <b>153 м<sup>3</sup>/c</b> <span class="up">9</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1			</div>						
+		</div>
+
+        <div class="data-block">
+            <img src="styles/img/informer/vilyuj.png" alt="" />
+            <div class="informer-block vilyuj">
+								<span class="current down">238.61</span>				<div class="data">
+					<div class="fpu" style="bottom:110px;"><span>249</span></div>
+					<div class="npu" style="bottom:100px;"><span >246</span></div>
+					<div class="umo" style="bottom:60px;"><span>234</span></div>
+					<div class="level" style="height:75px;"></div>
+				</div>
+				<div class="popup-wrapper">
+					<div class="popup-trigger">&nbsp;</div>
+					<div class="popup-info">			
+						<div class="legend">
+							<p><span class="l-red"></span>ФПУ &mdash; <b>249 м</b></p>
+							<p><span class="l-green"></span>НПУ &mdash; <b>246 м</b></p>
+							<p><span class="l-black"></span>УМО &mdash; <b>234 м</b></p>
+							<p>Уровень — <b>238.61 м</b> <span class="down">0.04</span></p>
+							<p>Свободная ёмкость — <b>15035 млн.м<sup>3</sup></b> <span class="up">69</span></p>
+							<p>Приток — <b>0 м<sup>3</sup>/c</b> </p>
+							<p>Общий расход — <b>924 м<sup>3</sup>/c</b> <span class="down">9</span></p>
+							<p>Расход через водосбросы — <b>0 м<sup>3</sup>/c</b>  </p> 
+						</div>
+					</div>
+				</div>1            </div>
+        </div>
+		
+	</div>
+	
+	<div class="footer-info">
+	
+		<div class="footer-info_block">
+			<div class="cnt">*</div>
+			<p>Данные предоставляются по будням с 11.09.2013.</p>
+			<p>Данные по Иркутской, Братской и Усть-Илимской ГЭС предоставлены ПАО «Иркутскэнерго».</p>
+			<p>Данные о гидрологической обстановке и состоянии водного режима работы ГЭС филиалов и ДЗО ПАО «РусГидро»<br>приводятся по состоянию на 08.00 утра и публикуются до 14:00 (по МСК).</p>
+			<p>Данные по приточности и расходам приводятся в среднем по состоянию за прошедшие сутки.</p>
+		</div>	
+		<div class="footer-info_block">
+			<div class="cnt">**</div>
+			<p>Данные предоставляются с 19.03.2018.</p>
+		</div>
+        <div class="footer-info_block">
+			<div class="cnt">***</div>
+			<p>Данные предоставляются с 08.10.2018.</p>
+		</div>
+
+	</div>
+	
+</div>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+	(function (d, w, c) {
+		(w[c] = w[c] || []).push(function() {
+			try {
+				w.yaCounter38342385 = new Ya.Metrika({
+					id:38342385,
+					clickmap:true,
+					trackLinks:true,
+					accurateTrackBounce:true,
+					webvisor:true
+				});
+			} catch(e) { }
+		});
+
+		var n = d.getElementsByTagName("script")[0],
+			s = d.createElement("script"),
+			f = function () { n.parentNode.insertBefore(s, n); };
+		s.type = "text/javascript";
+		s.async = true;
+		s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+		if (w.opera == "[object Opera]") {
+			d.addEventListener("DOMContentLoaded", f, false);
+		} else { f(); }
+	})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/38342385" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter --> 
+
+</body>
+</html>

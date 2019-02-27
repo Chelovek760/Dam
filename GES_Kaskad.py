@@ -1,9 +1,12 @@
-import matplotlib.pyplot as plt
-import Grafiki_Ischod
-import random
 import datetime
 import math
 import os
+import random
+
+import matplotlib.pyplot as plt
+
+import Grafiki_Ischod
+
 
 class GES():
     def __init__(self, DATA, S_ZERKALA, MAX_SBROS):
@@ -118,8 +121,6 @@ def main():
     raschod2 = []
     raschod3 = []
     procs_open = []
-    proc_treb = []
-    levels_vchod = []
     datenow_str = str(datenow)
     ges1 = GES(DATA[name][datenow_str], S_ZERKALA_1, MAX_RASHOD_1)
     ges2 = GES(DATA[name1][datenow_str], S_ZERKALA_2, MAX_RASHOD_2)

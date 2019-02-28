@@ -20,7 +20,7 @@ class GES():
         self.S_ZERKALA = S_ZERKALA
         self.MAX_SBROS = MAX_SBROS
 
-    def compare(self, current_Level, prit):
+    def compare(self, current_Level, prit, rashod, proc_now, TIME_FOR_FULL_OPEN):
         if current_Level < self.NPU * 1.00001 and current_Level > self.NPU * 0.9999999:
             treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
             if treb_proc > 1:
@@ -31,8 +31,17 @@ class GES():
                 if (current_Level - self.UMO) > 0:
                     treb_proc = -(math.log10((current_Level - self.UMO) / (self.NPU - self.UMO)))
                     # print(treb_proc, 'menishe')
+                    # print(prit,rashod)
+
+                    if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) > rashod:
+                        treb_proc = treb_proc - 1 / TIME_FOR_FULL_OPEN
+                        # print(treb_proc)
+                    if treb_proc <= 0:
+                        treb_proc = 0
                     if treb_proc > 1:
                         treb_proc = 1
+                    print(treb_proc)
+
                     return treb_proc
                 else:
                     return 0
@@ -53,9 +62,7 @@ class GES():
         proc_v_sec = 1 / TIME_FOR_FULL_OPEN
         if proctreb < 0:
             return 0
-        if (proctreb - procnow) > proc_v_sec:
-            #if proctreb < procnow+proc_v_sec and proctreb>proc_v_sec+procnow:
-             #   procnow = proctreb
+        if abs((proctreb - procnow)) > proc_v_sec:
             if proctreb > procnow:
                 procnow = procnow + proc_v_sec
             if proctreb < procnow:
@@ -89,22 +96,22 @@ def momental_rash_prolong_na_den(voda_v_sec):
 
 
 def main():
-    file_name = os.getcwd()+'\\GES_DATA.json'
+    file_name = os.getcwd() + '\\GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
-    period = 30
+    period = 10
     S_ZERKALA_1 = 4550 * 1000 * 1000
-    MAX_RASHOD_1 = 10000
-    VREMYA_POLNOGO_OTKR_1 = 60
+    MAX_RASHOD_1 = 1000
+    VREMYA_POLNOGO_OTKR_1 = 600
     S_ZERKALA_2 = 1591 * 1000 * 1000
-    MAX_RASHOD_2 = 10000
-    VREMYA_POLNOGO_OTKR_2 = 60
+    MAX_RASHOD_2 = 300
+    VREMYA_POLNOGO_OTKR_2 = 600
     S_ZERKALA_3 = 1508 * 1000 * 1000
-    MAX_RASHOD_3 = 10000
-    VREMYA_POLNOGO_OTKR_3 = 60
+    MAX_RASHOD_3 = 100
+    VREMYA_POLNOGO_OTKR_3 = 600
     deltatime = datetime.timedelta(period)
-    dateStart = datetime.datetime(2018, 6, 1)
+    dateStart = datetime.datetime(2018, 8, 1)
     datenow = dateStart
-    time = 24 * 60 * 60
+    time = 24*60*60
     levels = []
     name = 'rybinsk'
     name1 = 'nijegorod'
@@ -112,14 +119,12 @@ def main():
     levels1 = []
     levels2 = []
     levels3 = []
-    proc_now2 = 0
-    proc_now3 = 0
     pritok1 = []
     pritok2 = []
     pritok3 = []
-    raschod1 = []
-    raschod2 = []
-    raschod3 = []
+    raschod1mas = []
+    raschod2mas = []
+    raschod3mas = []
     procs_open = []
     datenow_str = str(datenow)
     ges1 = GES(DATA[name][datenow_str], S_ZERKALA_1, MAX_RASHOD_1)
@@ -128,7 +133,12 @@ def main():
     current_levels = [ges1.Level, ges2.Level, ges3.Level]
     times = [i for i in range(1, time)]
     proc_now = 0
+    proc_now2 = 0
+    proc_now3 = 0
     proc_treb = []
+    raschod1 = 0
+    raschod2 = 0
+    raschod3 = 0
     while datenow - dateStart < deltatime:
         datenow_str = str(datenow)
         print('Date\n', datenow, '\n')
@@ -141,35 +151,38 @@ def main():
             prit = V_to_H(raspred_na_den_with_noise(ges1.PRITOK), ges1.S_ZERKALA, )
             pritok1.append(prit)
             current_level = prit + current_levels[0]
-            proc_treb.append((ges1.compare(current_level, prit)))
-            proc_now = ges1.delay((ges1.compare(current_level, prit)), proc_now, VREMYA_POLNOGO_OTKR_1)
+            #proc_treb.append((ges1.compare(current_level, prit, raschod1, proc_now, VREMYA_POLNOGO_OTKR_1)))
+            proc_now = ges1.delay((ges1.compare(current_level, prit, raschod1, proc_now, VREMYA_POLNOGO_OTKR_1)),
+                                  proc_now, VREMYA_POLNOGO_OTKR_1)
             # print(proc_now)
-            raschod = V_to_H(ges1.MAX_SBROS, ges1.S_ZERKALA) * proc_now
-            raschod1.append(raschod)
-            current_levels[0] = current_level - raschod
-            prit = V_to_H(H_to_V(raspred_na_den_with_noise(raschod), ges1.S_ZERKALA, ) ,
+            raschod1 = V_to_H(ges1.MAX_SBROS, ges1.S_ZERKALA) * proc_now
+            raschod1mas.append(raschod1)
+            current_levels[0] = current_level - raschod1
+            prit = V_to_H(H_to_V(raspred_na_den_with_noise(raschod1), ges1.S_ZERKALA, ),
                           ges2.S_ZERKALA)
             # print(raschod,prit)
             pritok2.append(prit)
             current_level = prit + current_levels[1]
-            proc_treb.append((ges2.compare(current_level, prit)))
-            proc_now2 = ges2.delay((ges2.compare(current_level, prit)), proc_now2, VREMYA_POLNOGO_OTKR_2)
-            raschod = V_to_H(ges2.MAX_SBROS, ges2.S_ZERKALA) * proc_now2
-            raschod2.append(raschod)
-            current_levels[1] = current_level - raschod
-            prit = V_to_H(H_to_V(raspred_na_den_with_noise(raschod), ges2.S_ZERKALA, ) ,
+            #proc_treb.append((ges2.compare(current_level, prit, raschod2, proc_now2, VREMYA_POLNOGO_OTKR_2)))
+            proc_now2 = ges2.delay((ges2.compare(current_level, prit, raschod2, proc_now2, VREMYA_POLNOGO_OTKR_2)),
+                                   proc_now2, VREMYA_POLNOGO_OTKR_2)
+            raschod2 = V_to_H(ges2.MAX_SBROS, ges2.S_ZERKALA) * proc_now2
+            raschod2mas.append(raschod2)
+            current_levels[1] = current_level - raschod2
+            prit = V_to_H(H_to_V(raspred_na_den_with_noise(raschod2), ges2.S_ZERKALA, ),
                           ges3.S_ZERKALA)
             pritok3.append(prit)
             current_level = prit + current_levels[2]
-            proc_treb.append((ges3.compare(current_level, prit)))
-            proc_now3 = ges3.delay((ges3.compare(current_level, prit)), proc_now3, VREMYA_POLNOGO_OTKR_3)
-            raschod = V_to_H(ges3.MAX_SBROS, ges3.S_ZERKALA) * proc_now3
-            raschod3.append(raschod)
-            current_levels[2] = current_level - raschod
+            #proc_treb.append((ges3.compare(current_level, prit, raschod3, proc_now3, VREMYA_POLNOGO_OTKR_3)))
+            proc_now3 = ges3.delay((ges3.compare(current_level, prit, raschod3, proc_now3, VREMYA_POLNOGO_OTKR_3)),
+                                   proc_now3, VREMYA_POLNOGO_OTKR_3)
+            raschod3 = V_to_H(ges3.MAX_SBROS, ges3.S_ZERKALA) * proc_now3
+            raschod3mas.append(raschod3)
+            current_levels[2] = current_level - raschod3
             levels1.append(current_levels[0])
             levels2.append(current_levels[1])
             levels3.append(current_levels[2])
-            procs_open.append(proc_now)
+            # procs_open.append(proc_now)
             # print(proc_now,proc_now2,proc_now3)
         datenow = datenow + datetime.timedelta(1)
     # print(procs_open)
@@ -197,19 +210,19 @@ def main():
     plt.savefig('3.png')
     fig = plt.figure()
     plt.plot([i for i in range(len(levels1))], pritok1, label='prit')
-    plt.plot([i for i in range(len(levels1))], raschod3, label='raschd')
+    plt.plot([i for i in range(len(levels1))], raschod3mas, label='raschd')
     plt.legend()
     plt.grid()
     plt.savefig('4.png')
     fig = plt.figure()
     plt.plot([i for i in range(len(levels2))], pritok2, label='prit')
-    plt.plot([i for i in range(len(levels2))], raschod2, label='raschd')
+    plt.plot([i for i in range(len(levels2))], raschod2mas, label='raschd')
     plt.legend()
     plt.grid()
     plt.savefig('5.png')
     fig = plt.figure()
     plt.plot([i for i in range(len(levels3))], pritok3, label='prit')
-    plt.plot([i for i in range(len(levels3))], raschod3, label='rashod')
+    plt.plot([i for i in range(len(levels3))], raschod3mas, label='rashod')
     plt.legend()
     plt.grid()
     plt.savefig('6.png')

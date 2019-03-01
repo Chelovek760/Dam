@@ -55,10 +55,8 @@ class GES():
                         treb_proc = 0
                     if treb_proc > 1:
                         treb_proc = 1
-                    if (prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA) * self.MAX_SBROS) < (
-                            MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA) * self.MAX_SBROS):
+                    if treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA) < MIN_RASHOD:
                         treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
-                    print(treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA))
                     return treb_proc
                 else:
                     return 1

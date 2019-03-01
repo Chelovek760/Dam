@@ -104,7 +104,7 @@ def momental_rash_prolong_na_den(voda_v_sec):
 def main():
     file_name = os.getcwd() + '\\GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
-    period = 10
+    period = 23
     S_ZERKALA_1 = 4550 * 1000 * 1000
     MAX_RASHOD_1 = 300
     VREMYA_POLNOGO_OTKR_1 = 60

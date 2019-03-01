@@ -1,6 +1,7 @@
 import datetime
 import os
 import random
+import sys
 
 import math
 import matplotlib.pyplot as plt
@@ -33,15 +34,15 @@ class GES():
                     treb_proc = -(math.log10((current_Level - self.UMO) / (self.NPU - self.UMO)))
                     # print(treb_proc, 'menishe')
                     # print(prit,rashod)
-
-                    if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
-                        treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
+                    # if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
+                    #  treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)*abs(rashod-prit)
+                    if self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * V_to_H(self.MAX_SBROS,
+                                                                                    self.S_ZERKALA) < MIN_RASHOD:
+                        treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
                     if treb_proc <= 0:
                         treb_proc = 0
                     if treb_proc > 1:
                         treb_proc = 1
-                    if treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA) < MIN_RASHOD:
-                        treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
 
                     return treb_proc
 
@@ -51,12 +52,17 @@ class GES():
                 if (self.FPU - current_Level) > 0:
                     treb_proc = -(math.log10(((self.FPU - current_Level)) / (self.FPU - self.NPU)))
                     # print(treb_proc, 'Bol')
+                    if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
+                        treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA) * abs(rashod - prit)
+                        if self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * V_to_H(self.MAX_SBROS,
+                                                                                        self.S_ZERKALA) < MIN_RASHOD:
+                            treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
+
                     if treb_proc <= 0:
                         treb_proc = 0
                     if treb_proc > 1:
                         treb_proc = 1
-                    if treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA) < MIN_RASHOD:
-                        treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
+
                     return treb_proc
                 else:
                     return 1
@@ -102,9 +108,13 @@ def momental_rash_prolong_na_den(voda_v_sec):
 
 
 def main():
-    file_name = os.getcwd() + '\\GES_DATA.json'
+    sis = sys.platform
+    if sis == 'win32':
+        file_name = os.getcwd() + '\\GES_DATA.json'
+    else:
+        file_name = os.getcwd() + '/GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
-    period = 23
+    period = 365
     S_ZERKALA_1 = 4550 * 1000 * 1000
     MAX_RASHOD_1 = 300
     VREMYA_POLNOGO_OTKR_1 = 60

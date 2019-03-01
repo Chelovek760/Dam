@@ -1,9 +1,10 @@
 import json
 import os
+import sys
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 from matplotlib import dates
-from datetime import datetime
-import numpy as np
 
 
 def get_struct(file_name):
@@ -15,7 +16,11 @@ def get_struct(file_name):
 def main():
     plt.rcParams['pdf.fonttype'] = 42
     plt.rcParams['font.family'] = 'Calibri'
-    file_name='D:\Ботать\Проганье\Плотины\GES_DATA.json'
+    sis = sys.platform
+    if sis == 'win32':
+        file_name = os.getcwd() + '\\GES_DATA.json'
+    else:
+        file_name = os.getcwd() + '/GES_DATA.json'
     DATA=get_struct(file_name)
     WHAT_GRAF="Level"
     #for name in DATA:

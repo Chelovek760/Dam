@@ -1,8 +1,11 @@
-import matplotlib.pyplot as plt
-import Grafiki_Ischod
-import random
 import datetime
+import random
+import sys
+
 import math
+import matplotlib.pyplot as plt
+
+import Grafiki_Ischod
 
 
 class GES():
@@ -79,7 +82,11 @@ def momental_rash_prolong_na_den(voda_v_sec):
 
 
 def main():
-    file_name = 'D:\Ботать\Проганье\Плотины\GES_DATA.json'
+    sis = sys.platform
+    if sis == 'win32':
+        file_name = os.getcwd() + '\\GES_DATA.json'
+    else:
+        file_name = os.getcwd() + '/GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
     period = 5
     deltatime = datetime.timedelta(period)

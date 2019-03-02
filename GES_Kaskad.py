@@ -23,21 +23,24 @@ class GES():
 
     def compare(self, current_Level, prit, rashod, proc_now, TIME_FOR_FULL_OPEN):
         MIN_RASHOD = 1 * 10 ** (-7)
-        if current_Level < self.NPU * 1.000001 and current_Level > self.NPU * 0.999999999:
+        if current_Level < self.NPU * 1.01 and current_Level > self.NPU * 0.99:
             treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
+            if treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA) < MIN_RASHOD:
+                treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
             if treb_proc > 1:
                 treb_proc = 1
             return treb_proc
         else:
             if self.NPU > current_Level:
                 if (current_Level - self.UMO) > 0:
-                    treb_proc = -(math.log10((current_Level - self.UMO) / (self.NPU - self.UMO)))
+
+                    treb_proc = math.sqrt((-(math.log10((current_Level - self.UMO) / (self.NPU - self.UMO)))) ** 2 + (
+                                prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)) ** 2)
                     # print(treb_proc, 'menishe')
                     # print(prit,rashod)
                     # if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
                     #  treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)*abs(rashod-prit)
-                    if self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * V_to_H(self.MAX_SBROS,
-                                                                                    self.S_ZERKALA) < MIN_RASHOD:
+                    if treb_proc * V_to_H(self.MAX_SBROS, self.S_ZERKALA) < MIN_RASHOD:
                         treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
                     if treb_proc <= 0:
                         treb_proc = 0
@@ -50,13 +53,14 @@ class GES():
                     return 0
             else:
                 if (self.FPU - current_Level) > 0:
-                    treb_proc = -(math.log10(((self.FPU - current_Level)) / (self.FPU - self.NPU)))
+                    treb_proc = math.sqrt((-(math.log10((current_Level - self.UMO) / (self.NPU - self.UMO)))) ** 2 + (
+                                prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA)) ** 2)
                     # print(treb_proc, 'Bol')
-                    if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
-                        treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA) * abs(rashod - prit)
-                        if self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * V_to_H(self.MAX_SBROS,
-                                                                                        self.S_ZERKALA) < MIN_RASHOD:
-                            treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
+                    # if prit * self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * self.MAX_SBROS > rashod:
+                    #   treb_proc = prit / V_to_H(self.MAX_SBROS, self.S_ZERKALA) * abs(rashod - prit)
+                    if self.delay(treb_proc, proc_now, TIME_FOR_FULL_OPEN) * V_to_H(self.MAX_SBROS,
+                                                                                    self.S_ZERKALA) < MIN_RASHOD:
+                        treb_proc = MIN_RASHOD / V_to_H(self.MAX_SBROS, self.S_ZERKALA)
 
                     if treb_proc <= 0:
                         treb_proc = 0
@@ -74,11 +78,12 @@ class GES():
         proc_v_sec = 1 / TIME_FOR_FULL_OPEN
         if proctreb < 0:
             return 0
+
         if abs((proctreb - procnow)) > proc_v_sec:
             if proctreb > procnow:
-                procnow = procnow + proc_v_sec
+                procnow = proctreb + proc_v_sec
             if proctreb < procnow:
-                procnow = procnow - proc_v_sec
+                procnow = proctreb - proc_v_sec
             return procnow
         else:
             return proctreb
@@ -114,10 +119,10 @@ def main():
     else:
         file_name = os.getcwd() + '/GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
-    period = 365
+    period = 50
     S_ZERKALA_1 = 4550 * 1000 * 1000
-    MAX_RASHOD_1 = 300
-    VREMYA_POLNOGO_OTKR_1 = 60
+    MAX_RASHOD_1 = 600
+    VREMYA_POLNOGO_OTKR_1 = 100
     S_ZERKALA_2 = 1591 * 1000 * 1000
     MAX_RASHOD_2 = 300
     VREMYA_POLNOGO_OTKR_2 = 60
@@ -147,7 +152,7 @@ def main():
     ges3 = GES(DATA[name2][datenow_str], S_ZERKALA_3, MAX_RASHOD_3)
     current_levels = [ges1.Level, ges2.Level, ges3.Level]
     times = [i for i in range(1, time)]
-    proc_now = 0
+    proc_now1 = 0
     proc_now2 = 0
     proc_now3 = 0
     raschod1 = 0
@@ -166,10 +171,10 @@ def main():
             pritok1.append(prit)
             current_level = prit + current_levels[0]
             # proc_treb.append((ges1.compare(current_level, prit, raschod1, proc_now, VREMYA_POLNOGO_OTKR_1)))
-            proc_now = ges1.delay((ges1.compare(current_level, prit, raschod1, proc_now, VREMYA_POLNOGO_OTKR_1)),
-                                  proc_now, VREMYA_POLNOGO_OTKR_1)
+            proc_now1 = ges1.delay((ges1.compare(current_level, prit, raschod1, proc_now1, VREMYA_POLNOGO_OTKR_1)),
+                                   proc_now1, VREMYA_POLNOGO_OTKR_1)
             # print(proc_now)
-            raschod1 = V_to_H(ges1.MAX_SBROS, ges1.S_ZERKALA) * proc_now
+            raschod1 = V_to_H(ges1.MAX_SBROS, ges1.S_ZERKALA) * proc_now1
             raschod1mas.append(raschod1)
             current_levels[0] = current_level - raschod1
             prit = V_to_H(H_to_V(raspred_na_den_with_noise(raschod1), ges1.S_ZERKALA, ),
@@ -225,7 +230,7 @@ def main():
     plt.savefig('3.png')
     fig = plt.figure()
     plt.plot([i for i in range(len(levels1))], pritok1, label='prit')
-    plt.plot([i for i in range(len(levels1))], raschod3mas, label='raschd')
+    plt.plot([i for i in range(len(levels1))], raschod1mas, label='raschd')
     plt.legend()
     plt.grid()
     plt.savefig('4.png')

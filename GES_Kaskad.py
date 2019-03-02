@@ -81,9 +81,9 @@ class GES():
 
         if abs((proctreb - procnow)) > proc_v_sec:
             if proctreb > procnow:
-                procnow = proctreb + proc_v_sec
+                procnow = procnow + proc_v_sec
             if proctreb < procnow:
-                procnow = proctreb - proc_v_sec
+                procnow = procnow - proc_v_sec
             return procnow
         else:
             return proctreb

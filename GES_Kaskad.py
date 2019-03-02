@@ -119,15 +119,15 @@ def main():
     else:
         file_name = os.getcwd() + '/GES_DATA.json'
     DATA = Grafiki_Ischod.get_struct(file_name)
-    period = 50
+    period = 10
     S_ZERKALA_1 = 4550 * 1000 * 1000
-    MAX_RASHOD_1 = 600
+    MAX_RASHOD_1 = 1000
     VREMYA_POLNOGO_OTKR_1 = 100
     S_ZERKALA_2 = 1591 * 1000 * 1000
-    MAX_RASHOD_2 = 300
+    MAX_RASHOD_2 = 1000
     VREMYA_POLNOGO_OTKR_2 = 60
     S_ZERKALA_3 = 1508 * 1000 * 1000
-    MAX_RASHOD_3 = 300
+    MAX_RASHOD_3 = 1000
     VREMYA_POLNOGO_OTKR_3 = 60
     deltatime = datetime.timedelta(period)
     dateStart = datetime.datetime(2017, 9, 1)
